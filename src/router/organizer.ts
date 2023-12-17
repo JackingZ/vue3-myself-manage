@@ -1,33 +1,29 @@
-const organizer = [
+import { RouteRecordRaw } from 'vue-router';
+
+const organizer: Array<RouteRecordRaw> = [
   {
-    path: '/organzier',
-    name: 'organzier',
+    path: '/organzier/role',
+    name: 'role',
     meta: {
-      roles: ['organzier']
+      title: 'role'
     },
-    children: [
-      {
-        path: '/role',
-        name: 'role',
-        meta: {
-          roles: ['role']
-        }
-      },
-      {
-        path: '/user',
-        name: 'user',
-        meta: {
-          roles: ['user']
-        }
-      },
-      {
-        path: '/company',
-        name: 'company',
-        meta: {
-          roles: ['company']
-        }
-      }
-    ]
+    component: () => import('@/pages/organzier/role.vue')
+  },
+  {
+    path: '/organzier/user',
+    name: 'user',
+    meta: {
+      title: 'user'
+    },
+    component: () => import('@/pages/organzier/user.vue')
+  },
+  {
+    path: '/organzier/company',
+    name: 'company',
+    meta: {
+      title: 'company'
+    },
+    component: () => import('@/pages/organzier/company.vue')
   }
 ]
 

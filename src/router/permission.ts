@@ -1,15 +1,32 @@
-import { RouteRecordRaw } from 'vue-router'
-// 递归本地路由配置及后端路由权限点，返回新的路由
-export const filterAsyncRoutes = (routes: any[], roles: any[]) => {
-  const arr: RouteRecordRaw[] = []
-  routes.forEach((route: any) => {
-    if (route.meta && route.meta.roles && roles.some((role: any[]) => route.meta.roles.include(role))) {
-      if (route.children) {
-        route.children = filterAsyncRoutes(route.children, roles)
+import { Router } from 'vue-router'
+import { userStore } from '@/store/user'
+// import { i18n } from '@/i18n'
+
+// 路由权限配置
+export function setPermission(router: Router) {
+  router.beforeEach(async (to, from, next) => {
+    console.log('router.getRoutes()', router.getRoutes())
+    // if (to.meta.title) {
+    //   document.title = i18n.global.t(to.meta.title as string)
+    // }
+    if (!to.meta.noAuth) {
+      const store = userStore()
+      if (store.token) {
+        if (!store.userInfo) {
+          await store.getUserInfo()
+          next(to.fullPath)
+          return
+        }
+        next()
+      } else {
+        next({
+          path: '/login',
+          query: { redirect: to.fullPath },
+        })
       }
-      arr.push(route)
+    } else {
+      next()
     }
   })
-  return arr
 }
 
